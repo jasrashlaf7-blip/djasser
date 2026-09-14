@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QueuePilot — Smart Virtual Queue</title>
+<style>
+:root{--bg:#06131f;--panel:#0d2030;--panel2:#102a3f;--text:#f4fbff;--muted:#9bb2c6;--accent:#54e4b7;--danger:#ff6b7a;--line:#21455e}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#06131f,#092335);font-family:Inter,system-ui,sans-serif;color:var(--text)}.wrap{max-width:1080px;margin:auto;padding:30px 18px}
+header{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:20px}.brand{font-size:25px;font-weight:800}.brand span{color:var(--accent)}
+.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}@media(max-width:780px){.grid{grid-template-columns:1fr}}
+.card{background:rgba(13,32,48,.92);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 14px 40px rgba(0,0,0,.2)}h1{margin:0 0 8px;font-size:42px}.muted{color:var(--muted)}.stat{background:#0a1a29;border:1px solid #1a3850;border-radius:16px;padding:18px}.big{font-size:38px;font-weight:800}.row{display:flex;gap:10px;flex-wrap:wrap}.row> *{flex:1}
+input,select,button{width:100%;padding:12px 14px;border-radius:12px;border:1px solid #31536b;background:#071927;color:var(--text);font:inherit}button{cursor:pointer;background:var(--accent);border:none;color:#052018;font-weight:800}button.secondary{background:#183349;color:#dceef8}.queue{margin-top:14px;display:grid;gap:10px}.ticket{padding:13px 14px;border-radius:12px;background:#0a1c2b;border:1px solid #1c3c53;display:flex;justify-content:space-between;align-items:center}.chip{padding:5px 8px;border-radius:99px;background:#153248;color:#b5d7e7;font-size:12px}.notice{margin-top:12px;padding:12px;border-radius:12px;background:#0b2a2d;color:#bcefe7;display:none}.mini{font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div class="brand">Queue<span>Pilot</span></div><div class="chip" id="clock">--:--:--</div></header>
+<div class="grid">
+<section class="card">
+<h1>Skip the line.</h1><p class="muted">A working prototype for virtual queues, wait-time estimation and counter control.</p>
+<div class="row">
+<div class="stat"><div class="mini">People waiting</div><div class="big" id="count">0</div></div>
+<div class="stat"><div class="mini">Estimated wait</div><div class="big"><span id="wait">0</span> min</div></div>
+</div>
+<div style="margin-top:16px" class="row">
+<input id="name" placeholder="Customer name">
+<input id="service" placeholder="Service e.g. Passport">
+<button id="join">Get a ticket</button>
+</div>
+<div class="notice" id="ticketNotice"></div>
+</section>
+<section class="card">
+<h2>Counter control</h2>
+<p class="muted">Average service time</p>
+<div class="row"><input id="serviceTime" type="number" min="1" value="6"><button id="next" class="secondary">Call next</button></div>
+<div class="queue" id="queue"></div>
+<p class="mini">Data is stored locally in this browser.</p>
+</section>
+</div>
+</div>
+<script>
+const KEY="queuepilot-v1";
+let state=JSON.parse(localStorage.getItem(KEY)||'{"items":[],"next":101,"serviceTime":6}');
+const $=id=>document.getElementById(id);
+function save(){localStorage.setItem(KEY,JSON.stringify(state));render()}
+function estimate(){return state.items.length*Number(state.serviceTime||6)}
+function render(){
+ $("count").textContent=state.items.length;
+ $("wait").textContent=estimate();
+ $("serviceTime").value=state.serviceTime;
+ $("queue").innerHTML=state.items.map((x,i)=>`<div class="ticket"><div><strong>#${x.ticket}</strong> ${escapeHtml(x.name)}<div class="mini">${escapeHtml(x.service)}</div></div><span class="chip">${i*Number(state.serviceTime)} min</span></div>`).join("")||'<p class="muted">Queue is empty.</p>';
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+$("join").onclick=()=>{const name=$("name").value.trim()||"Guest";const service=$("service").value.trim()||"General service";state.items.push({ticket:state.next++,name,service});$("name").value="";$("service").value="";$("ticketNotice").style.display="block";$("ticketNotice").textContent=`Ticket #${state.items.at(-1).ticket} created — estimated wait ${estimate()} minutes.`;save()}
+$("next").onclick=()=>{if(!state.items.length)return;const served=state.items.shift();alert(`Now serving #${served.ticket} — ${served.name}`);save()}
+$("serviceTime").oninput=e=>{state.serviceTime=Math.max(1,Number(e.target.value)||6);save()}
+setInterval(()=>{$("clock").textContent=new Date().toLocaleTimeString()},1000);render();
+</script>
+</body>
+</html>

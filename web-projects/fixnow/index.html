@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FixNow — Community Repair Board</title>
+<style>
+:root{--bg:#0c1117;--panel:#121a23;--line:#253443;--text:#eef4fa;--muted:#91a3b6;--accent:#ffb84d;--green:#4fe0aa;--red:#ff6e7c}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(140deg,#0b1118,#10202a);font-family:Inter,system-ui,sans-serif;color:var(--text)}.wrap{max-width:1050px;margin:auto;padding:36px 18px}.top{display:flex;justify-content:space-between;gap:16px;align-items:end}.brand{font-size:38px;font-weight:900}.brand span{color:var(--accent)}.muted{color:var(--muted)}.layout{display:grid;grid-template-columns:340px 1fr;gap:18px;margin-top:20px}@media(max-width:780px){.layout{grid-template-columns:1fr}}.card{background:rgba(18,26,35,.96);border:1px solid var(--line);border-radius:20px;padding:18px}input,select,textarea,button{width:100%;padding:12px;border:1px solid var(--line);border-radius:11px;background:#0a121a;color:white;font:inherit;margin-top:8px}textarea{min-height:100px}.primary{background:var(--accent);border:none;color:#1b1306;font-weight:900;cursor:pointer}.filters{display:flex;gap:8px;flex-wrap:wrap}.filters button{width:auto;margin:0;padding:8px 12px;cursor:pointer}.issue{padding:15px;border:1px solid var(--line);border-radius:15px;margin-bottom:10px;background:#0e161f}.row{display:flex;justify-content:space-between;gap:12px}.badge{padding:5px 8px;border-radius:999px;font-size:11px}.high{background:#3b1b22;color:#ffb0ba}.medium{background:#3d3119;color:#ffd88d}.low{background:#183128;color:#9de7ca}.score{font-weight:900;color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><div><div class="brand">Fix<span>Now</span></div><p class="muted">A local board for repair requests, urgency scoring, and service discovery.</p></div><div class="score" id="stats">0 requests</div></div>
+<div class="layout">
+<section class="card">
+<h2>Create request</h2>
+<input id="title" placeholder="Phone screen is broken">
+<select id="category"><option>Electronics</option><option>Plumbing</option><option>Electrical</option><option>Car</option><option>Home</option><option>Other</option></select>
+<select id="urgency"><option value="3">Urgent</option><option value="2">Soon</option><option value="1">Routine</option></select>
+<input id="distance" type="number" min="0" value="2" placeholder="Distance (km)">
+<textarea id="desc" placeholder="Describe the issue..."></textarea>
+<button class="primary" id="add">Post request</button>
+</section>
+<section class="card">
+<h2>Requests</h2>
+<div class="filters"><button data-f="all">All</button><button data-f="3">Urgent</button><button data-f="2">Soon</button><button data-f="1">Routine</button></div>
+<div id="list" style="margin-top:14px"></div>
+</section>
+</div>
+</div>
+<script>
+const KEY="fixnow-v1";let data=JSON.parse(localStorage.getItem(KEY)||"[]");let filter="all";const $=id=>document.getElementById(id);
+function urgencyScore(x){return x.urgency*30 + Math.max(0,20-x.distance*4) + Math.min(20,x.desc.length/5)}
+function render(){const list=data.filter(x=>filter==="all"||String(x.urgency)===filter).sort((a,b)=>urgencyScore(b)-urgencyScore(a));$("stats").textContent=`${data.length} requests`;$("list").innerHTML=list.map(x=>`<article class="issue"><div class="row"><strong>${esc(x.title)}</strong><span class="badge ${x.urgency===3?"high":x.urgency===2?"medium":"low"}">${x.urgency===3?"URGENT":x.urgency===2?"SOON":"ROUTINE"}</span></div><p class="muted">${esc(x.desc)}</p><div class="row"><span class="muted">${x.category} · ${x.distance} km</span><span class="score">Priority ${Math.round(urgencyScore(x))}</span></div></article>`).join("")||'<p class="muted">No requests in this filter.</p>'}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+$("add").onclick=()=>{const title=$("title").value.trim();if(!title)return alert("Add a title.");data.push({title,category:$("category").value,urgency:Number($("urgency").value),distance:Number($("distance").value)||0,desc:$("desc").value.trim(),time:Date.now()});$("title").value="";$("desc").value="";localStorage.setItem(KEY,JSON.stringify(data));render()}
+document.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{filter=b.dataset.f;render()});render()
+</script>
+</body>
+</html>

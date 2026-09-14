@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LinkLens — URL Risk Analyzer</title>
+<style>
+:root{--bg:#080d18;--card:#111a29;--line:#283b57;--text:#f5f8ff;--muted:#9eacc0;--good:#59e391;--warn:#ffd36a;--bad:#ff7085}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 30% 0,#142646,#080d18 48%);font-family:Inter,system-ui,sans-serif;color:var(--text)}.wrap{max-width:900px;margin:auto;padding:50px 18px}.eyebrow{color:#8bc0ff;font-weight:800;letter-spacing:.08em}.card{margin-top:18px;background:rgba(17,26,41,.95);border:1px solid var(--line);border-radius:20px;padding:24px}.input{display:flex;gap:10px}.input input{flex:1;padding:15px;border:1px solid #37506e;background:#0a1320;border-radius:13px;color:#fff;font-size:16px}.input button{padding:0 20px;border-radius:13px;border:none;background:#8bc0ff;color:#07111f;font-weight:900;cursor:pointer}.score{display:flex;align-items:center;gap:20px}.circle{width:110px;height:110px;border-radius:50%;display:grid;place-items:center;border:8px solid var(--good);font-size:32px;font-weight:900}.muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}@media(max-width:650px){.grid{grid-template-columns:1fr}.input{flex-direction:column}.input button{padding:14px}}
+.signal{padding:13px;border:1px solid #263b55;border-radius:14px;background:#0c1624}.signal b{display:block;margin-bottom:4px}.bad{color:var(--bad)}.warn{color:var(--warn)}.good{color:var(--good)}.note{font-size:12px;color:#8091a8;margin-top:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="eyebrow">DJASSER LAB • SECURITY PROTOTYPE</div>
+<h1>LinkLens</h1>
+<p class="muted">An explainable, offline-first URL checker. It does not contact the website; it only analyzes the URL text using transparent heuristics.</p>
+<div class="card">
+<div class="input"><input id="url" placeholder="https://example.com/login"><button id="scan">Analyze</button></div>
+<div id="result"></div>
+<div class="note">This is a prototype, not a definitive phishing detector. Never enter passwords into suspicious pages.</div>
+</div>
+</div>
+<script>
+const suspiciousTlds=[".zip",".mov",".click",".top",".work",".xyz"];
+const riskyWords=["login","verify","update","secure","account","wallet","password","confirm","urgent","gift"];
+function analyze(raw){
+ let value=raw.trim(); if(!/^https?:\/\//i.test(value)) value="https://"+value;
+ let u; try{u=new URL(value)}catch{return {score:0,level:"Invalid URL",signals:["The text is not a valid URL."]}};
+ let score=0, signals=[];
+ const host=u.hostname.toLowerCase();
+ if(host.includes("xn--")){score+=25;signals.push(["Punycode domain","warn","Homograph-like domains can visually mimic another site."])}
+ if(/\d{1,3}(\.\d{1,3}){3}$/.test(host)){score+=20;signals.push(["IP address as host","warn","Real services usually use a recognizable domain name."])}
+ if(host.split(".").length>3){score+=10;signals.push(["Many subdomains","warn","Long subdomain chains deserve extra inspection."])}
+ if(u.protocol!=="https:"){score+=25;signals.push(["No HTTPS","bad","The URL uses HTTP instead of HTTPS."])}
+ if(value.length>120){score+=10;signals.push(["Very long URL","warn","Long URLs may hide the real destination or tracking data."])}
+ if(/[=@]/.test(u.username)){score+=15;signals.push(["Embedded username","warn","Username sections in URLs can be misleading."])}
+ suspiciousTlds.forEach(t=>{if(host.endsWith(t)){score+=12;signals.push([`Uncommon TLD: ${t}`,"warn","This alone is not malicious, but it increases the need for verification."])}})
+ riskyWords.forEach(word=>{if((host+u.pathname).includes(word)){score+=4;signals.push([`Sensitive word: ${word}`,"warn","Login/account language is often used in phishing lures."])}})
+ if(["google.com","microsoft.com","apple.com","github.com","openai.com"].includes(host)){score=Math.max(0,score-20);signals.push(["Recognized major domain","good","The hostname matches a well-known domain exactly."])}
+ score=Math.min(100,score);
+ const level=score<25?"Low risk":score<55?"Needs review":"High risk";
+ return {score,level,signals:[...new Map(signals.map(x=>[x[0],x])).values()]};
+}
+function render(r){
+ const color=r.score<25?"good":r.score<55?"warn":"bad";
+ document.getElementById("result").innerHTML=`<div style="margin-top:22px"><div class="score"><div class="circle ${color}">${r.score}</div><div><h2>${r.level}</h2><p class="muted">Risk score based on visible URL characteristics.</p></div></div><div class="grid" style="margin-top:18px">${(r.signals.length?r.signals:[["No obvious red flags","good","The URL passed the current prototype checks."]]).map(s=>`<div class="signal"><b class="${s[1]}">${s[0]}</b><span class="muted">${s[2]}</span></div>`).join("")}</div></div>`;
+}
+document.getElementById("scan").onclick=()=>render(analyze(document.getElementById("url").value));
+</script>
+</body>
+</html>

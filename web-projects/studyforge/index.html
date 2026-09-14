@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>StudyForge — Adaptive Study Mission</title>
+<style>
+:root{--bg:#f7f7fb;--card:#fff;--ink:#1a1d2b;--muted:#737b90;--accent:#7658ff;--line:#e2e5ed;--green:#21aa78}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#ece9ff,#f8f8fb 48%);font-family:Inter,system-ui,sans-serif;color:var(--ink)}.wrap{max-width:1000px;margin:auto;padding:34px 18px}.hero{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}@media(max-width:760px){.hero{grid-template-columns:1fr}}.card{background:rgba(255,255,255,.9);border:1px solid var(--line);border-radius:20px;padding:20px}.mission{background:#1d1a35;color:white;border-radius:20px;padding:24px}.mission h1{font-size:44px;margin:0 0 8px}.muted{color:var(--muted)}.mission .muted{color:#c1bed6}input,select,button{width:100%;padding:12px;border:1px solid var(--line);border-radius:11px;font:inherit}button{background:var(--accent);color:white;border:none;font-weight:900;cursor:pointer}.task{border:1px solid var(--line);padding:14px;border-radius:14px;margin-top:10px}.task.done{opacity:.6;text-decoration:line-through}.row{display:flex;gap:10px}.row>*{flex:1}.meter{height:10px;background:#eceef3;border-radius:99px;overflow:hidden}.bar{height:100%;background:var(--accent);width:0}.timer{font-size:56px;font-weight:900;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="hero">
+<section class="mission"><div class="muted">TODAY'S MISSION</div><h1 id="mission">Build momentum.</h1><p class="muted">StudyForge ranks your tasks using difficulty, urgency and energy so your day starts with a realistic sequence.</p><div class="meter"><div class="bar" id="bar"></div></div><p><strong id="progress">0%</strong> complete</p></section>
+<section class="card"><h2>Add task</h2><input id="title" placeholder="Revise Python loops"><div class="row"><select id="difficulty"><option value="1">Easy</option><option value="2">Medium</option><option value="3">Hard</option></select><select id="urgency"><option value="1">Low</option><option value="2">Medium</option><option value="3">High</option></select></div><div class="row" style="margin-top:8px"><input id="mins" type="number" value="25" min="5"><button id="add">Add</button></div><hr style="border:none;border-top:1px solid var(--line);margin:18px 0"><div class="timer" id="timer">25:00</div><button id="start">Start focus timer</button></section>
+</div>
+<section class="card" style="margin-top:18px"><h2>Adaptive task list</h2><div id="tasks"></div></section>
+</div>
+<script>
+const KEY="studyforge-v1";let tasks=JSON.parse(localStorage.getItem(KEY)||"[]");let timer=null,seconds=1500;const $=id=>document.getElementById(id);
+function priority(x){return x.difficulty*35+x.urgency*35+x.mins/5}
+function save(){localStorage.setItem(KEY,JSON.stringify(tasks));render()}
+function render(){const done=tasks.filter(t=>t.done).length;const pct=tasks.length?Math.round(done/tasks.length*100):0;$("progress").textContent=pct+"%";$("bar").style.width=pct+"%";const sorted=[...tasks].sort((a,b)=>(b.done? -1:0)+priority(b)-(a.done? -1:0)-priority(a));$("tasks").innerHTML=sorted.map(x=>`<div class="task ${x.done?"done":""}"><div class="row"><div><strong>${esc(x.title)}</strong><div class="muted">${x.mins} min · ${x.difficulty===3?"Hard":x.difficulty===2?"Medium":"Easy"} · ${x.urgency===3?"High":x.urgency===2?"Medium":"Low"}</div></div><button onclick="toggle('${x.id}')">${x.done?"Undo":"Done"}</button></div></div>`).join("")||'<p class="muted">Add your first task.</p>'}
+function toggle(id){const x=tasks.find(t=>t.id===id);x.done=!x.done;save()}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+$("add").onclick=()=>{const title=$("title").value.trim();if(!title)return;tasks.push({id:crypto.randomUUID(),title,mins:Number($("mins").value)||25,difficulty:Number($("difficulty").value),urgency:Number($("urgency").value),done:false});$("title").value="";save()}
+function paint(){const m=Math.floor(seconds/60),s=seconds%60;$("timer").textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0")}
+$("start").onclick=()=>{if(timer){clearInterval(timer);timer=null;$("start").textContent="Resume focus timer";return}timer=setInterval(()=>{if(seconds<=0){clearInterval(timer);timer=null;alert("Focus session complete!");return}seconds--;paint()},1000);$("start").textContent="Pause timer"}
+paint();render()
+</script>
+</body>
+</html>

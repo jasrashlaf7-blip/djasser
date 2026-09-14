@@ -1,66 +1,57 @@
-# Hi, I'm DJASSER ACHLAF 👋
+# DJASSER ACHLAF 🚀
 
-### Mobile Application Developer | AI-Assisted Developer | Young Innovator
+> **Mobile Application Developer · AI-Assisted Developer · Young Innovator**
 
 📍 Boumerdès, Algeria  
-📧 [jaserachlaf7@gmail.com](mailto:jaserachlaf7@gmail.com)
+📧 jaserachlaf7@gmail.com
 
 🥇 **1st Place — Olympiades des Métiers 2026**  
-📱 **Mobile Application Development — Boumerdès, Algeria**  
-🏅 **Gold Medal**
+📱 Mobile Application Development — Boumerdès  
+🏅 Gold Medal
 
-I am a Computer Science student at USTHB who enjoys turning ideas into functional digital products. I build web and mobile applications, experiment with AI-assisted development, and use modern tools such as GitHub and Firebase.
+---
 
-## 🚀 What I Build
+## 👤 Portfolio
 
-- 📱 Mobile Applications
-- 🌐 Web Applications
-- 🤖 AI-Assisted / Vibe Coding Projects
-- 🐍 Python Applications
-- 🔥 Firebase Projects
-- 🧩 Experimental & Accessibility Projects
+| Section | Description |
+|---|---|
+| 👤 [Profile](profile/) | My professional profile, skills, education, experience and achievements |
+| 🌐 [Web Projects](web-projects/) | Working browser prototypes built with HTML/CSS/JavaScript |
+| 📱 [Android Projects](android-projects/) | Android development projects and experiments |
+| 🐍 [Python Projects](python-projects/) | Python applications, exercises and experiments |
+| 🏆 [Achievements](achievements/) | Competitions, awards and milestones |
+| 📄 [CV](cv/) | My latest professional CV |
 
-## 🛠️ Tech Stack
+---
 
-`Python` `HTML5` `CSS` `JavaScript` `Android` `Firebase` `GitHub`
+## 🛠️ Core Technologies
 
-## 🏆 Achievement
+`Python` `HTML5` `CSS3` `JavaScript` `Android` `Firebase` `GitHub` `AI-Assisted Development`
 
-### 🥇 1st Place — Olympiades des Métiers 2026
-**Field:** Mobile Application Development  
-**Location:** Boumerdès, Algeria  
-**Award:** Gold Medal
+---
 
-## 🚀 Featured Projects
+## 🌐 Web Prototype Lab
 
-### Market Manager AI
-Smart POS and store-management platform designed for products, sales, inventory, and business operations.
+Five working prototypes are included in this repository:
 
-### Grasis
-Transportation-focused application designed to provide smarter digital tools and services for transportation management.
+1. 🎫 [QueuePilot](web-projects/queuepilot/) — Smart virtual queue
+2. 🛡️ [LinkLens](web-projects/linklens/) — Explainable URL risk analyzer
+3. 🔎 [LostLoop](web-projects/lostloop/) — Lost-and-found matcher
+4. 🧰 [FixNow](web-projects/fixnow/) — Community repair board
+5. 🧠 [StudyForge](web-projects/studyforge/) — Adaptive study planner + focus timer
 
-### MouthControl
-Experimental hands-free computer-control project exploring mouth movement and voice commands as alternative interaction methods.
+> Each web project is self-contained and can be opened directly in a browser.
 
-## 👨‍🏫 Experience
+---
 
-- Python Programming Instructor
-- English Teacher
-- Freelance Developer
-- Freelance Designer
+## 🌍 Language Versions
 
-## 🎓 Education
+[🇬🇧 English](profile/README.md) · [🇩🇿 العربية](profile/README-AR.md) · [🇫🇷 Français](profile/README-FR.md)
 
-**Computer Science — USTHB**  
-University of Science and Technology Houari Boumediene  
-2026 – Present
+---
 
-## 🌍 Languages
+## 📫 Contact
 
-- Arabic — Native
-- English — B2 / Upper-Intermediate
-- French — Basic understanding
-
-## 🌐 Language Versions
-
-[🇬🇧 English](README.md) · [🇩🇿 العربية](README-AR.md) · [🇫🇷 Français](README-FR.md)
+**DJASSER ACHLAF**  
+📧 jaserachlaf7@gmail.com  
+📍 Boumerdès, Algeria

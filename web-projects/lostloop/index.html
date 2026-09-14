@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LostLoop — Smart Lost & Found</title>
+<style>
+:root{--bg:#f6f8fb;--card:#fff;--text:#172033;--muted:#6c7890;--line:#dbe3ed;--accent:#5a67ff;--good:#1ca67a}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#eef3ff,#f6f8fb 45%);font-family:Inter,system-ui,sans-serif;color:var(--text)}.wrap{max-width:1050px;margin:auto;padding:36px 18px}.hero{background:#171f39;color:white;border-radius:24px;padding:28px}.hero p{color:#b9c4dc;max-width:700px}.grid{display:grid;grid-template-columns:330px 1fr;gap:18px;margin-top:18px}@media(max-width:800px){.grid{grid-template-columns:1fr}}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px}.tabs{display:flex;gap:8px;margin-bottom:12px}.tab{padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:#f6f8fb;cursor:pointer}.tab.active{background:var(--accent);color:white;border-color:var(--accent)}input,select,textarea,button{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font:inherit;margin-top:8px}textarea{min-height:90px;resize:vertical}button{background:var(--accent);border:none;color:white;font-weight:800;cursor:pointer}.item{display:grid;grid-template-columns:1fr auto;gap:10px;padding:14px;border:1px solid var(--line);border-radius:14px;margin-bottom:10px}.score{font-weight:900;color:var(--good)}.muted{color:var(--muted)}.small{font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<section class="hero"><h1>🔎 LostLoop</h1><p>Turn a lost-and-found board into a matching engine. Add a missing item, add a found item, and the prototype scores likely matches by keywords, category and location.</p></section>
+<div class="grid">
+<section class="card"><div class="tabs"><button class="tab active" id="lostTab">Lost</button><button class="tab" id="foundTab">Found</button></div>
+<label>Item title<input id="title" placeholder="Black backpack"></label>
+<label>Category<select id="category"><option>Electronics</option><option>Documents</option><option>Keys</option><option>Bag</option><option>Clothing</option><option>Other</option></select></label>
+<label>Location<input id="location" placeholder="University library"></label>
+<label>Details<textarea id="details" placeholder="Sticker on the side, blue notebook inside..."></textarea></label>
+<button id="add">Publish item</button></section>
+<section class="card"><h2>Potential matches</h2><div id="matches"></div><hr style="border:none;border-top:1px solid var(--line);margin:18px 0"><h2>Recent items</h2><div id="items"></div></section>
+</div>
+</div>
+<script>
+const KEY="lostloop-v1";let type="lost";let items=JSON.parse(localStorage.getItem(KEY)||"[]");const $=id=>document.getElementById(id);
+function save(){localStorage.setItem(KEY,JSON.stringify(items));render()}
+function words(s){return new Set((s.toLowerCase().match(/[a-z0-9]+/g)||[]))}
+function score(a,b){
+ let score=0;if(a.category===b.category)score+=35;if(a.location.toLowerCase()===b.location.toLowerCase())score+=25;
+ const wa=words(a.title+" "+a.details),wb=words(b.title+" "+b.details);let common=0;for(const w of wa)if(w.length>2&&wb.has(w))common++;
+ score+=Math.min(40,common*10);return Math.min(100,score)
+}
+function render(){
+ const opposite=type==="lost"?"found":"lost";const current=items.filter(x=>x.type===type);
+ const matches=[];
+ current.forEach(x=>items.filter(y=>y.type===opposite).map(y=>({x,y,s:score(x,y)})).filter(z=>z.s>=25).forEach(z=>matches.push(z)));
+ matches.sort((a,b)=>b.s-a.s);
+ $("matches").innerHTML=matches.slice(0,5).map(m=>`<div class="item"><div><strong>${m.x.title}</strong> ↔ <strong>${m.y.title}</strong><div class="small">${m.x.location} · ${m.y.location}</div></div><div class="score">${m.s}%</div></div>`).join("")||'<p class="muted">Add both lost and found items to see potential matches.</p>';
+ $("items").innerHTML=items.slice().reverse().map(x=>`<div class="item"><div><strong>${x.title}</strong><div class="small">${x.type.toUpperCase()} · ${x.category} · ${x.location}</div></div><div class="small">${new Date(x.time).toLocaleDateString()}</div></div>`).join("")||'<p class="muted">No items yet.</p>'
+}
+$("lostTab").onclick=()=>{type="lost";$("lostTab").classList.add("active");$("foundTab").classList.remove("active");render()}
+$("foundTab").onclick=()=>{type="found";$("foundTab").classList.add("active");$("lostTab").classList.remove("active");render()}
+$("add").onclick=()=>{const title=$("title").value.trim();if(!title)return alert("Enter an item title.");items.push({type,title,category:$("category").value,location:$("location").value.trim(),details:$("details").value.trim(),time:Date.now()});$("title").value="";$("location").value="";$("details").value="";save()}
+render();
+</script>
+</body>
+</html>
