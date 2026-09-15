@@ -1,70 +1,59 @@
-# 👤 DJASSER ACHLAF
+# Hi, I'm DJASSER ACHLAF 👋
 
-### Mobile Application Developer · AI-Assisted Developer · Young Innovator
+### Mobile Application Developer | AI-Assisted Developer | Young Innovator
 
 📍 Boumerdès, Algeria  
 📧 [jaserachlaf7@gmail.com](mailto:jaserachlaf7@gmail.com)
 
+🥇 **1st Place — Olympiades des Métiers 2026**  
+📱 **Mobile Application Development — Boumerdès, Algeria**  
+🏅 **Gold Medal**
+
+I am a Computer Science student at USTHB who enjoys turning ideas into functional digital products. I build web and mobile applications, experiment with AI-assisted development, and use modern tools such as GitHub and Firebase.
+
+## 🚀 What I Build
+
+- 📱 Mobile Applications
+- 🌐 Web Applications
+- 🤖 AI-Assisted / Vibe Coding Projects
+- 🐍 Python Applications
+- 🔥 Firebase Projects
+- 🧩 Experimental & Accessibility Projects
+
+## 🛠️ Tech Stack
+
+`Python` `HTML5` `CSS` `JavaScript` `Android` `Firebase` `GitHub`
+
 ## 🏆 Achievement
 
-🥇 **1st Place — Olympiades des Métiers 2026**  
-**Mobile Application Development · Boumerdès, Algeria**  
-🏅 Gold Medal
+### 🥇 1st Place — Olympiades des Métiers 2026
+**Field:** Mobile Application Development  
+**Location:** Boumerdès, Algeria  
+**Award:** Gold Medal
 
-## 🧠 About Me
+## 🚀 Featured Projects
 
-Computer Science student at USTHB interested in mobile development, web applications, AI-assisted development and innovative digital products. I enjoy turning ideas into working prototypes and practical applications.
+### Market Manager AI
+Smart POS and store-management platform designed for products, sales, inventory, and business operations.
 
-## 🛠️ Skills
+### Grasis
+Transportation-focused application designed to provide smarter digital tools and services for transportation management.
 
-- Python
-- HTML5 / CSS3 / JavaScript
-- Android Development
-- Web App Development
-- Firebase
-- GitHub
-- AI-Assisted Development / Vibe Coding
-- Video Editing
-- Problem Solving
-- Project Development
+### MouthControl
+Experimental hands-free computer-control project exploring mouth movement and voice commands as alternative interaction methods.
 
-## 💼 Experience
+## 👨‍🏫 Experience
 
-### Python Programming Instructor
-- Teach Python programming fundamentals.
-- Build exercises, projects and assessments.
-- Explain programming concepts through practical work.
-
-### English Teacher
-- Prepare lessons and interactive learning activities.
-- Teach students at different levels.
-
-### Freelance Developer
-- Build web and mobile applications.
-- Prototype and improve ideas with AI-assisted workflows.
-- Use GitHub and Firebase in development projects.
-
-### Freelance Designer
-- Create branding, advertising and digital visual assets.
+- Python Programming Instructor
+- English Teacher
+- Freelance Developer
+- Freelance Designer
 
 ## 🎓 Education
 
-**USTHB — University of Science and Technology Houari Boumediene**  
-Computer Science — 2026–Present
-
-**Baccalaureate — 2026**  
-Algeria
-
-## 🚀 Selected Projects
-
-### Market Manager AI
-Smart POS and store-management concept for products, sales, inventory and business operations.
-
-### Grasis
-Transportation-focused application concept.
-
-### MouthControl
-Experimental hands-free computer-control concept using mouth movement and voice commands.
+**Computer Science — USTHB**  
+University of Science and Technology Houari Boumediene  
+2026 – Present
 
 ## 🌍 Languages
 
@@ -72,8 +61,6 @@ Experimental hands-free computer-control concept using mouth movement and voice 
 - English — B2 / Upper-Intermediate
 - French — Basic understanding
 
-## 🌐 Other Versions
+## 🌐 Language Versions
 
 [🇬🇧 English](README.md) · [🇩🇿 العربية](README-AR.md) · [🇫🇷 Français](README-FR.md)
-
-[⬅ Back to Portfolio](../)
